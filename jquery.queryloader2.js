@@ -30,6 +30,7 @@
         barHeight: 1,
         percentage: false,
         deepSearch: true,
+        loadingText: "Loading",
         completeAnimation: "fade",
         onLoadComplete: function () {
             if (qLoptions.completeAnimation == "grow") {
@@ -64,20 +65,16 @@
             overflow: "hidden"
         });
         for (var i = 0; qLimages.length > i; i++) {
-            $.ajax({
-                url: qLimages[i],
-                type: 'HEAD',
-                success: function(data) {
-                    qLimageCounter++;
-                    addImageForPreload(this['url']);
-                }
-            });
+            qLimageCounter++;
+            addImageForPreload(qLimages[i]);
         }
     }
 
     var addImageForPreload = function(url) {
         var image = $("<img />").attr("src", url).bind("load", function () {
             completeImageLoading();
+        }).bind("error", function () {
+            qLimageCounter--;
         }).appendTo(qLimageContainer);
     }
 
@@ -90,7 +87,7 @@
         }, 200);
 
         if (qLoptions.percentage == true) {
-            $(qLpercentage).text(Math.ceil(percentage) + "%");
+            $(qLpercentage).text(qLoptions.loadingText + " " + Math.ceil(percentage) + "%");
         }
 
         if (qLdone == qLimageCounter) {
@@ -123,15 +120,15 @@
             top: "50%"
         }).appendTo(qLoverlay);
         if (qLoptions.percentage == true) {
-            qLpercentage = $("<div id='qLpercentage'></div>").text("0%").css({
+            qLpercentage = $("<div id='qLpercentage'></div>").text(qLoptions.loadingText + " 0%").css({
                 height: "40px",
-                width: "100px",
+                width: "97%",
                 position: "absolute",
-                fontSize: "3em",
+                fontSize: "2em",
                 top: "50%",
-                left: "50%",
+                right: "3%",
                 marginTop: "-" + (59 + qLoptions.barHeight) + "px",
-                textAlign: "center",
+                textAlign: "right",
                 marginLeft: "-50px",
                 color: qLoptions.barColor
             }).appendTo(qLoverlay);
