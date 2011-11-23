@@ -64,12 +64,15 @@
             overflow: "hidden"
         });
         for (var i = 0; qLimages.length > i; i++) {
+            qLimageCounter++;
             $.ajax({
                 url: qLimages[i],
                 type: 'HEAD',
                 success: function(data) {
-                    qLimageCounter++;
                     addImageForPreload(this['url']);
+                },
+                error: function(fail) {
+                    qLimageCounter--;
                 }
             });
         }
